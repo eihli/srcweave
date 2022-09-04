@@ -11,14 +11,14 @@ echo '<meta name="viewport" content="width=device-width">'
 echo "<title>$LIT_TITLE</title>"
 
 # prettify highlighting
-echo '<link rel="stylesheet" href="google-code-prettify/prettify.css">'
-echo '<link rel="stylesheet" href="styles/prettify-theme.css">'
+echo '<link rel="stylesheet" href="/google-code-prettify/prettify.css">'
+echo '<link rel="stylesheet" href="/styles/prettify-theme.css">'
 
-echo '<script defer src="google-code-prettify/prettify.js"></script>'
+echo '<script defer src="/google-code-prettify/prettify.js"></script>'
 
 for TYPE in $LIT_TYPES
 do
-    FORMAT='<script defer src="google-code-prettify/%s"></script>\n'
+    FORMAT='<script defer src="/google-code-prettify/%s"></script>\n'
     case "$TYPE" in
         "emacs-lisp")printf "$FORMAT" 'lang-el.js';;
         "common-lisp") printf "$FORMAT" 'lang-lisp.js';;
@@ -37,13 +37,13 @@ do
     esac
 done
 
-echo '<script defer src="google-code-prettify/run_prettify.js"></script>'
+echo '<script defer src="/google-code-prettify/run_prettify.js"></script>'
 
 # KaTex math
 if [ -n "$LIT_MATH" ]
 then
-    echo '<link rel="stylesheet" href="katex/katex.min.css">'
-    echo '<script defer src="katex/katex.min.js"></script>'
+    echo '<link rel="stylesheet" href="/katex/katex.min.css">'
+    echo '<script defer src="/katex/katex.min.js"></script>'
 
     echo "<script>
     function addMath() {
@@ -71,7 +71,7 @@ then
     </script>"
 fi
 
-echo '<link rel="stylesheet" href="styles/main.css">'
+echo '<link rel="stylesheet" href="/styles/main.css">'
 echo "</head>"
 
 if [ -n "$LIT_MATH" ]
