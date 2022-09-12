@@ -22,9 +22,61 @@
 ; One-to-one correspondence between .lit and .html files.
 ; The body of an .html file should look the same regardless of whether the .lit is in another context (like a book).
 
-(defstruct weaver 
+(defun -get (key alist)
+  (assoc key alist :test #'equal))
+
+(defun get-section (weaver section &optional chapter)
+  (let* ((m (weaver-section-map weaver))
+         (s (-get section m)))
+    (cond
+      ((null s) '())
+      ((al-singlep s) (cadr s))
+      (t (-get chapter s)))))
+
+(defun add-section (weaver section &optional chapter)
+  (let ((s (-get section (weaver-section-map weaver))))
+    ;; If the section is already there, then a chapter
+    ;; must be provided
+    (if s
+        (let ((s (acons ))) (setf
+                 (weaver-section-map weaver)
+                 (acons section (weaver-section-map weaver))))
+        )))
+
+(comment
+ (let ((alist '()))
+   (setf alist (acons "foo" '() alist))
+   alist)
+ (let ((alist (make-weaver)))
+   (add-section alist "foo bar")
+   (add-section alist "baz" "buzz")
+   (weaver-section-map alist))
+
+ )
+
+(comment
+ (let* ((file-defs (parse-lit-files '("dev.lit")))
+        (weaver (make-weaver-default file-defs)))
+   (add-section weaver "foo bar")
+   (weaver-section-map weaver))
+
+ )
+
+(defstruct weaver
   (def-table (make-hash-table :test #'equal) :type hash-table)
   (use-table (make-hash-table :test #'equal) :type hash-table)
+  ;; section-map is used to map chapter/section text to their respective
+  ;; anchor ids, like #s2:4
+  ;;
+  ;; This lets you create markdown links like this:
+  ;; [some chapter: some section](@{some section}@{some chapter})
+  ;; Which will be woven to (for example):
+  ;; [some chapter: some section](#s2:4)
+  ;;
+  ;; It's implemented as a trie so that it's to check if a section is unique and
+  ;; if it is then the chapter is optional. If the section isn't unique and
+  ;; there's no specified chapter, then we can throw an error.
+  (section-map '() :type list)
   (initial-def-table (make-hash-table :test #'equal) :type hash-table)
 
   (toc nil :type list)

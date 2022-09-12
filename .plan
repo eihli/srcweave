@@ -1,0 +1,1 @@
+[link text to some chapter or section](@{name of it}) should parse to [link text...section](#c:0) or whatever.

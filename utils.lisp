@@ -82,3 +82,9 @@
 
 (define-condition user-error (simple-error) ())
 
+(defun al-singlep (l)
+  (= 2 (length l)))
+
+(defmacro comment (body)
+  (declare (ignore body))
+  nil)
