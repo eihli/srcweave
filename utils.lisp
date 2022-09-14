@@ -82,9 +82,41 @@
 
 (define-condition user-error (simple-error) ())
 
+(defun singlep (l)
+  (= 1 (length l)))
+
 (defun al-singlep (l)
   (= 2 (length l)))
 
-(defmacro comment (body)
+(defmacro comment (&rest body)
   (declare (ignore body))
   nil)
+
+(defun trie-assoc (key alist)
+  (assoc key alist :test #'equal))
+
+(defun trie-put (alist key val)
+  (if (singlep key)
+      (acons (car key) (acons :terminal val '()) alist)
+      (let ((child (trie-assoc (car key) alist)))
+        (if child
+            (progn
+              (rplacd child (trie-put (cdr child) (cdr key) val))
+              alist)
+            (acons (car key) (trie-put '()  (cdr key) val) alist)))))
+
+(defun trie-get (alist key)
+  (if (singlep key)
+      (trie-assoc (car key) alist)
+      (trie-get (cdr (trie-assoc (car key) alist)) (cdr key))))
+
+(comment
+ (trie-put '() '(1 2) 3)
+ (let ((trie (trie-put
+              (trie-put
+               (trie-put '() '(2) 3)
+               '(1) 2)
+              '(1 2) 3)))
+   (print (cdr (trie-get trie '(1))))
+   (print (assoc :terminal (cdr (trie-get trie '(1 2))))))
+ )

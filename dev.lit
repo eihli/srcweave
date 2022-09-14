@@ -14,9 +14,11 @@ What follows is foobar.lisp.
 @{foobaz}
 ---
 
-## Foobaz
+## Foobazs
 
-And this is the content of the Foobaz section.
+And this is the content of the [Foobaz](@Foobazs) section.
+
+Here's a ref. @{foobaz} What's it do?
 
 --- foobaz
 (format nil (* 2 2))
